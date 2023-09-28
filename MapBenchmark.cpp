@@ -4,8 +4,8 @@
 #include <map>
 #include <unordered_map>
 
-static constexpr int64_t numItems = 20000000;
-static constexpr int64_t numRandomSamples = 10000000;
+static constexpr int64_t numItems = 50000000;
+static constexpr int64_t numRandomSamples = 50000000;
 
 template<typename T>
 void fillElements(T& m, std::string name)
