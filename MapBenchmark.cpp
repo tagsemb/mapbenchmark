@@ -3,9 +3,14 @@
 #include <string>
 #include <map>
 #include <unordered_map>
+#include <random>
 
 static constexpr int64_t numItems = 50000000;
 static constexpr int64_t numRandomSamples = 50000000;
+
+static std::random_device random_device;
+static std::mt19937 random_engine(random_device());
+static std::uniform_int_distribution<int64_t> random_distribution(0, numItems - 1);
 
 template<typename T>
 void fillElements(T& m, std::string name)
@@ -22,28 +27,28 @@ template<typename T>
 int64_t iterateElements(T& m, std::string name)
 {
 	StopWatch stopWatch(name + " iteration");
-	int64_t dummy = 0;
+	int64_t checksum = 0;
 	for (const auto& [key, value] : m)
 	{
-		dummy += value + key;
+		checksum += value + key;
 	}
 	stopWatch.LogElapsed();
-	return dummy;
+	return checksum;
 }
 
 template<typename T>
 int64_t randomAccess(T& m, std::string name)
 {
 	StopWatch stopWatch(name + " random access of " + std::to_string(numRandomSamples) + " elements");
-	srand(324873);
-	int64_t dummy = 0;
+	random_engine.seed(324873);
+	int64_t checksum = 0;
 	for (int64_t sample = 0; sample < numRandomSamples; sample++)
 	{
-		const int64_t key = rand() % numItems;
-		dummy += m[key] + key;
+		const int64_t key = random_distribution(random_engine);
+		checksum += m[key] + key;
 	}
 	stopWatch.LogElapsed();
-	return dummy;
+	return checksum;
 }
 
 template<typename T>
